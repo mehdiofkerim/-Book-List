@@ -1,0 +1,71 @@
+const titleInput = document.querySelector('#title')
+const authorInput = document.querySelector('#author')
+const yearInput = document.querySelector('#year')
+const bookListElem = document.querySelector('#book-list')
+const btn = document.querySelector('.btn')
+let bookListArray = []
+
+function addNewBookList (event) {
+    event.preventDefault()
+
+    if (titleInput.value == '' || authorInput.value == '' || yearInput.value == '') {
+        alert('Please Fill All The Input Boxes')
+    } else {
+
+        let bookListObj = {
+            id: bookListArray.length + 1,
+            title: titleInput.value,
+            author: authorInput.value,
+            year: yearInput.value
+        }
+    
+        bookListArray.push(bookListObj)
+        setLocalStorage(bookListArray)
+    }
+    
+}
+
+function setLocalStorage (bookList) {
+    localStorage.setItem('books' , JSON.stringify(bookList))
+    addBookList(bookListArray)
+    console.log(bookList)
+}
+
+function addBookList (bookListArray) {
+    let trElem, titleElem, authorElem, yearElem 
+
+    bookListElem.innerHTML = ''
+    bookListArray.forEach(book => {
+        
+        trElem = document.createElement('tr')
+        
+        titleElem = document.createElement('th')
+        titleElem.innerHTML = book.title
+        
+        authorElem = document.createElement('th')
+        authorElem.innerHTML = book.author
+        
+        yearElem = document.createElement('th')
+        yearElem.innerHTML = book.year
+
+        trElem.append(titleElem, authorElem, yearElem)
+        bookListElem.append(trElem)
+        
+    })
+
+    titleInput.value = ''
+    authorInput.value = ''
+    yearInput.value = ''
+
+}
+
+function getlocalStorage(){
+    let localStorageBooks = localStorage.getItem('books')
+    if(localStorageBooks){
+        bookListArray = JSON.parse(localStorageBooks)
+        addBookList(bookListArray)
+    }
+}
+
+btn.addEventListener('click' , addNewBookList)
+window.addEventListener('load' , getlocalStorage)
